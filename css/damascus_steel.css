@@ -1,0 +1,52 @@
+/*****************************************************************************
+ *
+ * File: damascus_steel.css
+ * Authors: James Kuczynski <jkuczyns@cs.uml.edu>
+ *          Joshua Rodriguez <jrodrigu@cs.uml.edu>
+ * File Description: Cascading style sheet for the frontend.  This features
+ *                   a dark, gray/blue motif.
+ *
+ * Created: 11/08/2016 by  J.K.
+ * Last Modified: 11/08/2016 by J.K.
+ *
+ *****************************************************************************
+ */
+
+QWidget {
+	background-color: #13136A
+}
+
+QPushButton {
+	background-color: darkblue;
+	color: cornflowerblue;
+}
+
+/* FIXME: horrible color scheme */
+QPushButton:disabled {
+	background-color: red;
+}
+
+QLineEdit {
+	color: cornflowerblue;
+}
+
+QLabel {
+    color: cornflowerblue;
+}
+
+QSpinBox {
+    color: cornflowerblue;
+	background-color: white;
+}
+
+QCheckBox {
+	color: cornflowerblue;
+}
+
+QRadioButton {
+    color: cornflowerblue;
+}
+
+QListWidget {
+    color: cornflowerblue;
+}
