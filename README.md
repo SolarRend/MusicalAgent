@@ -50,6 +50,8 @@ Undergraduate Researcher,<br>
 **Install**
 
 ```
+sudo apt-get install python-qt4
+sudo apt-get install 
 sudo apt-get install python-cffi
 sudo pip install pysoundcard
 sudo apt-get install libavformat-dev
@@ -57,14 +59,15 @@ sudo apt-get install libavformat-dev
 
 ###**Build & Run**
 
-Install PyQt:
-```
-sudo apt-get install python-qt4
-```
 
-Start a terminal and run:
+Test user interface
 ```
 python musical_agent.py
+```
+
+Test pitch detection
+```
+python Au2Hz.py audio_file_name.wav sample_rate
 ```
 
 
