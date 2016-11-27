@@ -52,7 +52,7 @@ class MasterGui(QWidget):
         self.recordGui = RecordGui.RecordGui()
         self.premadeRecGui = PremadeRecGui.PremadeRecGui()
         self.playGui = PlayGui.PlayGui()
-        self.helpGui = HelpGui.HelpGui('css/classic.css') #damascus_steel.css
+        self.helpGui = HelpGui.HelpGui('css/damascus_steel.css') #damascus_steel.css
         self.pages = [self.startGui, self.recordGui, self.premadeRecGui, self.playGui]
 
         self.backBtn = QPushButton("<Back")
@@ -81,7 +81,7 @@ class MasterGui(QWidget):
         self.outerLayout.addWidget(self.startGui, 0, 0, Qt.AlignCenter)
         self.outerLayout.addLayout(self.btnLayout, 1, 0, Qt.AlignRight)
 
-        style = open('css/classic.css').read() # damascus_steel.css
+        style = open('css/damascus_steel.css').read() # damascus_steel.css
         self.setStyleSheet(style)
 
         self.move(800, 400)
