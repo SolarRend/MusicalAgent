@@ -2,17 +2,29 @@
 Internal representation of the musical agent world.
 Contains: States, Actions, Rewards and Penalties
 '''
+import random
 class MusicWorld:
 
-    def __init__(self):
+    def __init__(self, scale):
 
         # getting 180 states into list
         self.stateSpace = self.initStateSpace()
-        ## getting unique start state
+
+        # setting unique start state
         self.startState = (None, -1)
+
+        # setting unique end state
+        self.terminalState = (None, 15)
+
+        # scale that the agent is trying to learn
+        # contains 7 elements which are notes
+        self.goalScale = scale
 
     def getStartState(self):
         return self.startState
+
+    def getTerminalState(self):
+        return self.terminalState
 
     #Initialize states
     def initStateSpace(self):
@@ -61,25 +73,79 @@ class MusicWorld:
         # if this is last note in sequence then there is just
         # one action to finish
         elif (currState[1] == 14):
-            legalActions.append("finish")
+            legalActions.append(("finish", self.terminalState))
 
         # this is an intermediate state  with 179 actions
         else:
             for state in self.stateSpace:
                 if state == currState:
                     continue
-                legalActions.append(state)
+                legalActions.append(("play", state))
 
         return legalActions
 
 
+    #simple transition function for playing notes
+    def transiton(self, currState, action):
+        #** PLAY NOTES **
+        return action[1]
+
     #Determines reward(or penalty) for state, action and state'
-    def getReward(self, state, action, nextState):
-        #if  ()
-        return
+    def getReward(self, state, action, statePrime):
 
-world = MusicWorld()
+        #total rewards
+        bounty = 0
 
-#world.getLegalActions(("G", 0))
+        # taking data from states
+        prevNotePlayed = state[0]
+        prevNumOfNotesPlayed = state[1]
+        currNotePlayed = statePrime[0]
+        currNumOfNotesPlayed = statePrime[1]
+
+
+
+        #collect massive reward for finishing scale crescendo + decrescendo
+        if  (action[0] == "finish"):
+             bounty += 75
+
+        #receive massive penalty for playing out of number sequence
+        if (currNumOfNotesPlayed != prevNumOfNotesPlayed+1):
+            bounty += -100
+
+        #recive penalty for not not being scale
+        # **this is where differently weighted penalties will take place **
+        if (currNotePlayed not in self.goalScale):
+            bounty += -50
+
+        return bounty
+
+
+scaleList = ["C", "D", "E", "F", "G", "A", "B"]
+
+agent = MusicWorld(scaleList)
+
+currState = agent.getStartState()
+
+while (currState != agent.getTerminalState()):
+
+    print "currState:"
+    print currState
+
+    legalActions = agent.getLegalActions(currState)
+    randomAction = random.choice(legalActions)
+    print "taking action:"
+    print randomAction
+
+    nextState = agent.transiton(currState, randomAction)
+    print "nextState:"
+    print nextState
+
+    reward = agent.getReward(currState, randomAction, nextState)
+    print "claiming reward:"
+    print reward
+    currState = nextState
+
+print "currState:"
+print currState
 
 
