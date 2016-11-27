@@ -3,12 +3,10 @@ Internal representation of the musical agent world.
 Contains: States, Actions, Rewards and Penalties
 '''
 import random
+import p
 class MusicWorld:
 
     def __init__(self, scale):
-
-        # getting 180 states into list
-        self.stateSpace = self.initStateSpace()
 
         # setting unique start state
         self.startState = (None, -1)
@@ -19,6 +17,9 @@ class MusicWorld:
         # scale that the agent is trying to learn
         # contains 7 elements which are notes
         self.goalScale = scale
+
+        # getting 180 states into list
+        self.stateSpace = self.initStateSpace()
 
     def getStartState(self):
         return self.startState
@@ -70,9 +71,10 @@ class MusicWorld:
             for state in self.stateSpace:
                 legalActions.append(("play", state))
 
-        # if this is last note in sequence then there is just
+        # if this is last note in a sequence OR a note
+        # not in the goal scale then there is just
         # one action to finish
-        elif (currState[1] == 14):
+        elif (currState[1] == 14 or (currState[0] not in self.goalScale)):
             legalActions.append(("finish", self.terminalState))
 
         # this is an intermediate state  with 179 actions
@@ -86,7 +88,7 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def transiton(self, currState, action):
+    def takeAction(self, currState, action):
         #** PLAY NOTES **
         return action[1]
 
@@ -112,7 +114,7 @@ class MusicWorld:
         if (currNumOfNotesPlayed != prevNumOfNotesPlayed+1):
             bounty += -100
 
-        #recive penalty for not not being scale
+        #recive penalty for not not being in scale
         # **this is where differently weighted penalties will take place **
         if (currNotePlayed not in self.goalScale):
             bounty += -50
@@ -136,7 +138,7 @@ while (currState != agent.getTerminalState()):
     print "taking action:"
     print randomAction
 
-    nextState = agent.transiton(currState, randomAction)
+    nextState = agent.takeAction(currState, randomAction)
     print "nextState:"
     print nextState
 
