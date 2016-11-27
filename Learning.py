@@ -14,10 +14,6 @@
 
 import random
 
-
-DEBUG = False
-
-
 class Learning:
 
     def __init__(self, actionFn = None, alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10):
@@ -28,6 +24,7 @@ class Learning:
         self.discount = float(gamma)
         self.numTraining = int(numTraining)
 
+        #FIXME: this is from the ReinforcementAgent
         if actionFn == None:
             actionFn = lambda state: state.getLegalActions()
         self.actionFn = actionFn
@@ -134,7 +131,6 @@ class Learning:
             nextSquare[action] = self.computationHelper(prevWedge, nextWedge)
             self.values[state] = nextSquare
 
-        self.toString()
 
 
     def computationHelper(self, oldVal, newVal):
@@ -161,11 +157,3 @@ class Learning:
           obtain legal actions for a state
         """
         return self.actionFn(state) #FIXME: this is from learningAgents.py
-
-
-    def toString(self):
-        if DEBUG:
-            print "current values:"
-            for value in self.values:
-                print value
-
