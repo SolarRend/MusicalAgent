@@ -14,7 +14,7 @@ Joshua Rodriguez,<br>
 Undergraduate Researcher,<br>
 [Robotics Laboratory][1],<br>
 [University of Massachusetts Lowell][2].<br>
-*Email:* jrodrigu@cs.uml.edu
+*Email:* jrodrig1@cs.uml.edu
 
 =====
 
@@ -42,23 +42,25 @@ Undergraduate Researcher,<br>
 
 - Python >= 2.7
 - PyQT *(Python language bindings for the QT Project)*
+- pygame *(the midi module)*
+ - timidity
 - aubio
  - cffi
  - pysoundcard
 
 
-**Install**
-
+**Install** *(Linux)*
 ```
 sudo apt-get install python-qt4
-sudo apt-get install 
+sudo apt-get install python-pygame
 sudo apt-get install python-cffi
 sudo pip install pysoundcard
 sudo apt-get install libavformat-dev
+sudo apt-get install timidity
 ```
 
-###**Build & Run**
 
+###**Build & Run**
 
 Test user interface
 ```
@@ -68,6 +70,16 @@ python musical_agent.py
 Test pitch detection
 ```
 python Au2Hz.py audio_file_name.wav sample_rate
+```
+
+Test audio output (Linux):
+*(Note: You may have to change the audio port number)*
+```
+timidity -Os -iA
+```
+open a second terminal and run:
+```
+python Player.py
 ```
 
 

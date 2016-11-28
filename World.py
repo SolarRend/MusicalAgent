@@ -3,7 +3,11 @@ Internal representation of the musical agent world.
 Contains: States, Actions, Rewards and Penalties
 '''
 import random
-import p
+import Player
+
+# create audio player; use audio port 3
+global_player = Player.Player(3)
+
 class MusicWorld:
 
     def __init__(self, scale):
@@ -20,6 +24,8 @@ class MusicWorld:
 
         # getting 180 states into list
         self.stateSpace = self.initStateSpace()
+
+
 
     def getStartState(self):
         return self.startState
@@ -89,7 +95,17 @@ class MusicWorld:
 
     #simple transition function for playing notes
     def takeAction(self, currState, action):
-        #** PLAY NOTES **
+
+        # select octave
+        try:
+            if currState[1] == 7:
+                octave = 5
+            else:
+                octave = 4
+            #print "playing: note=", currState[0], "octave=", octave
+            global_player.playNote(currState[0], octave)
+        except:
+            global_player.destroy()
         return action[1]
 
     #Determines reward(or penalty) for state, action and state'
@@ -150,4 +166,4 @@ while (currState != agent.getTerminalState()):
 print "currState:"
 print currState
 
-
+global_player.destroy()

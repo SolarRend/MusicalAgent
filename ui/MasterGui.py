@@ -4,7 +4,7 @@
 ##
 ## File: MasterGui.py
 ## Authors: James Kuczynski <jkuczyns@cs.uml.edu>
-##          Joshua Rodriguez <jrodrigu@cs.uml.edu>
+##          Joshua Rodriguez <jrodrig1@cs.uml.edu>
 ## File Description: This file contains the main control code for the
 ##                   frontend.
 ##

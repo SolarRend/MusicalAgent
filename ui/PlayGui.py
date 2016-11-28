@@ -4,7 +4,7 @@
 ##
 ## File: PremadeRecGui.py
 ## Authors: James Kuczynski <jkuczyns@cs.uml.edu>
-##          Joshua Rodriguez <jrodrigu@cs.uml.edu>
+##          Joshua Rodriguez <jrodrig1@cs.uml.edu>
 ## File Description: This file allows the user to watch the robot learning,
 ##                   and customize different parameters during and after
 ##                   it is learning.
