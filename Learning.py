@@ -24,7 +24,7 @@ class Learning:
         self.discount = float(gamma)
         self.numTraining = int(numTraining)
 
-        #FIXME: this is from the ReinforcementAgent
+        #FIXME: this is from
         if actionFn == None:
             actionFn = lambda state: state.getLegalActions()
         self.actionFn = actionFn
@@ -156,4 +156,4 @@ class Learning:
           state. This is what you should use to
           obtain legal actions for a state
         """
-        return self.actionFn(state) #FIXME: this is from learningAgents.py
+        return self.actionFn(state) #FIXME
