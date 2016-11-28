@@ -1,10 +1,12 @@
 '''
 Internal representation of the musical agent world.
 Contains: States, Actions, Rewards and Penalties
+Authors: James Kuczynski <jkuczyns@cs.uml.edu>
+         Joshua Rodriguez <jrodrig1@cs.uml.edu>
 '''
+
 import random
 import Player
-
 # create audio player; use audio port 3
 global_player = Player.Player(3)
 
@@ -96,16 +98,22 @@ class MusicWorld:
     #simple transition function for playing notes
     def takeAction(self, currState, action):
 
-        # select octave
-        try:
-            if currState[1] == 7:
-                octave = 5
-            else:
-                octave = 4
-            #print "playing: note=", currState[0], "octave=", octave
-            global_player.playNote(currState[0], octave)
-        except:
-            global_player.destroy()
+        # finish action
+        if (action[0] != "finish"):
+
+            try:
+                #peak of crescendo play next octave
+                if action[1][1] == 7:
+                    octave = 5
+                else:
+                    octave = 4
+
+                #play note
+                global_player.playNote(action[1][0], octave)
+
+            except KeyboardInterrupt:
+                global_player.destroy()
+
         return action[1]
 
     #Determines reward(or penalty) for state, action and state'
