@@ -67,10 +67,12 @@ Test user interface
 python musical_agent.py
 ```
 
+
 Test pitch detection
 ```
 python Au2Hz.py audio_file_name.wav sample_rate
 ```
+
 
 Test audio output (Linux):
 *(Note: You may have to change the audio port number)*
@@ -80,6 +82,16 @@ timidity -Os -iA
 open a second terminal and run:
 ```
 python Player.py
+```
+
+
+Test World (with audio)
+```
+timidity -Os -iA
+```
+In a second terminal run:
+```
+python World.py
 ```
 
 

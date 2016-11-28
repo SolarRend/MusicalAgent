@@ -39,6 +39,17 @@ class Note:
     A_SHARP_4 = 70
     B_4 = 71
     C_5 = 72
+    C_SHARP_5 = 73
+    D_5 = 74
+    D_SHARP_5 = 75
+    E_5 = 76
+    F_5 = 77
+    F_SHARP_5 = 78
+    G_5 = 79
+    G_SHARP_5 = 80
+    A_5 = 81
+    A_SHARP_5 = 82
+    B_5 = 83
 
 
 class Player:
@@ -85,6 +96,28 @@ class Player:
             currNote = Note.B_4
         elif note == "C" and octave == 5:
             currNote = Note.C_5
+        elif note == "C#" and octave == 5:
+            currNote = Note.C_SHARP_5
+        elif note == "D" and octave == 5:
+            currNote = Note.D_5
+        elif note == "D#" and octave == 5:
+            currNote = Note.D_SHARP_5
+        elif note == "E" and octave == 5:
+            currNote = Note.E_5
+        elif note == "F" and octave == 5:
+            currNote = Note.F_5
+        elif note == "F#" and octave == 5:
+            currNote = Note.F_SHARP_5
+        elif note == "G" and octave == 5:
+            currNote = Note.G_5
+        elif note == "G#" and octave == 5:
+            currNote = Note.G_SHARP_5
+        elif note == "A" and octave == 5:
+            currNote = Note.A_5
+        elif note == "A#" and octave == 5:
+            currNote = Note.A_SHARP_5
+        elif note == "B" and octave == 5:
+            currNote = Note.B_5
         else:
             print "ERROR: using default of middle-C"
             currNote = Note.C_4
@@ -106,13 +139,15 @@ class Player:
 # test case
 if __name__ == "__main__":
 
-    player = Player(3)
+    player = Player(3, Instrument.GRAND_PIANO, 127, 0.15)
 
     # "every" note in an octave
     octave = [("C", 4), ("C#", 4), ("D", 4), ("D#", 4),
               ("E", 4), ("F", 4), ("F#", 4), ("G", 4),
               ("G#", 4), ("A", 4), ("A#", 4), ("B", 4),
-              ("C", 5)]
+              ("C", 5), ("C#", 5), ("D", 5), ("D#", 5),
+              ("E", 5), ("F", 5), ("F#", 5), ("G", 5),
+              ("G#", 5), ("A", 5), ("A#", 5), ("B", 5),]
 
     # play a chromatic run
     # if program quits before finishing, delete the audio player object.
