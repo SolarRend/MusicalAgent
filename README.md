@@ -30,7 +30,7 @@ Undergraduate Researcher,<br>
 
 ###**Project Synopsis**
 
-*TBA...*
+This is an AI which the user can teach to play--and indeed compose--music.
 
 
 ###**Introduction**
@@ -40,8 +40,8 @@ Undergraduate Researcher,<br>
 
 ###**Dependencies**
 
-- Python >= 2.7
-- PyQT *(Python language bindings for the QT Project)*
+- Python 2 *(tested with 2.7)*
+- PyQT4 *(Python language bindings for the QT Project)*
 - pygame *(the midi module)*
  - timidity
 - aubio
@@ -85,12 +85,13 @@ python Player.py
 
 ###**Future Work**
 
-*TBA...*
+Because this is a college software course final project, it is unlikely that
+we will continue to develope it past the end of the semester of Fall 2016.
 
 
 ###**Acknowledgments**
 
-*TBA...*
+- This work was supported in part by Dr. Fred Martin
 
 
 [1]: http://robotics.cs.uml.edu/

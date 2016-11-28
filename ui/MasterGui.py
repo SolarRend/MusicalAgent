@@ -32,7 +32,7 @@ class Page:
 
 
 """
-"
+" This class contains the outermost widget/window of the user interface.
 "
 """
 class MasterGui(QWidget):
@@ -48,6 +48,8 @@ class MasterGui(QWidget):
     " Initializes the UI elements
     """
     def initUi(self):
+
+        # create the widgets
         self.startGui = StartGui.StartGui()
         self.recordGui = RecordGui.RecordGui()
         self.premadeRecGui = PremadeRecGui.PremadeRecGui()
@@ -66,7 +68,7 @@ class MasterGui(QWidget):
         self.helpBtn = QPushButton("Help")
         self.helpBtn.clicked.connect(self.helpBtnSlot)
 
-
+        # add back, next, finish, cancel, help to a separate layout
         self.btnLayout = QHBoxLayout()
         self.btnLayout.addWidget(self.backBtn)
         self.btnLayout.addWidget(self.nextBtn)
@@ -74,6 +76,7 @@ class MasterGui(QWidget):
         self.btnLayout.addWidget(self.cancelBtn)
         self.btnLayout.addWidget(self.helpBtn)
 
+        # initially, the user cannot go back or finish
         self.backBtn.setEnabled(False)
         self.finishBtn.setEnabled(False)
 
@@ -81,12 +84,14 @@ class MasterGui(QWidget):
         self.outerLayout.addWidget(self.startGui, 0, 0, Qt.AlignCenter)
         self.outerLayout.addLayout(self.btnLayout, 1, 0, Qt.AlignRight)
 
+        # load the style file
         style = open('css/damascus_steel.css').read() # damascus_steel.css
         self.setStyleSheet(style)
 
+        # window orientation/resizing, etc.
         self.move(800, 400)
         self.resize(500, 400)
-        self.setWindowTitle('Calculator')
+        self.setWindowTitle('Musical Agent')
 
         self.setLayout(self.outerLayout)
 
@@ -97,6 +102,8 @@ class MasterGui(QWidget):
     def backBtnSlot(self):
 
         print "back; current page:", self.page
+
+        # enable the back button to unload/load pages
         if self.page == Page.RECORD_GUI:
             self.unloadPage(1)
             self.loadPage(0)
