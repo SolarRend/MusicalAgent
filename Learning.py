@@ -13,147 +13,103 @@
 ##############################################################################
 
 import random
+import World
 
-class Learning:
 
-    def __init__(self, actionFn = None, alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10):
-        self.values = dict() #util.Counter()  # key, square; each square has four wedges
+class Learning(World.MusicWorld):
+
+    def __init__(self, scale = ["C", "D", "E", "F", "G", "A", "B"], alpha=1.0, epsilon=0.05, gamma=0.8, numTraining = 10):
+
+        #set the goal scale
+        #super(Learning, self).__init__(scale)
+        World.MusicWorld.__init__(self, scale)
+
+        self.values = {} #util.Counter()  # key, square; each square has four wedges
 
         self.alpha = float(alpha)
         self.epsilon = float(epsilon)
-        self.discount = float(gamma)
+        self.gamma = float(gamma)
         self.numTraining = int(numTraining)
 
-        #FIXME: this is from
-        if actionFn == None:
-            actionFn = lambda state: state.getLegalActions()
-        self.actionFn = actionFn
+        #current state
+        self.currState = self.getStartState()
+
+        #list of q-values
+        self.qvalues = {}
 
 
-    def getQValue(self, state, action):
-        square = self.values[state]
-        qvalue = 0.0
-        if not square == 0:
-            qvalue = square.values[action]
+    def qLearning(self):
 
-        return qvalue
+        while self.currState != self.getTerminalState():
+            # get the list of available actions
+            actions = self.getLegalActions(self.currState)
 
+            actionAndQValue = {}
 
-    def computeValueFromQValues(self, state):
+            #randomly choose an action
+            for action in actions:
+                if (self.currState, action) in self.qvalues:
+                    actionAndQValue[action] = self.qvalues[(self.currState, action)]
+                else:
+                    actionAndQValue[action] = 0
 
-        legalActions = self.getLegalActions(state)
-        currBestQVal = float('-inf')
-        if len(legalActions) == 0:
-            currBestQVal = 0.0
-        else:
-            for action in legalActions:
-                qvalue = self.getQValue(state, action)
-                if currBestQVal < qvalue:
-                    currBestQVal = qvalue
+            #TODO: choose BEST action
+            #currAction = random.choice(actions)
 
-        if currBestQVal == float('-inf'):
-            currBestQVal = 0.0
+            all = actionAndQValue.items()
+            values = [x[1] for x in all]
+            maxIndex = values.index(max(values))
 
-        return currBestQVal
+            currMaxAction = all[maxIndex]
 
 
-    def computeActionFromQValues(self, state):
+            print "currMaxActino=", currMaxAction[0]
 
-        currBestAction = None
-        currBestCost = float('-inf')
-        legalActions = self.getLegalActions(state)
+            #get the next state
+            nextState = self.takeAction(self.currState, currMaxAction[0])
 
-        currBestAction = None
-        currBesCost = float('-inf')
-        legalActions = self.getLegalActions(state)
+            print "nextState (real)=", nextState
 
-        currSquare = self.values[state]
-        if not currSquare == 0:
-            for action in legalActions:
-                if currSquare.values[action] > currBestCost:
-                    currBestCost = currSquare.values[action]
-                    currBestAction = action
+            nextActions = self.getLegalActions(nextState)
 
-        return currBestAction
+            nextActionAndNextQValue = {}
 
+            for action in nextActions:
+                if (nextState, action) in self.qvalues:
+                    nextActionAndNextQValue[action] = self.qvalues[(nextState, action)]
+                else:
+                    nextActionAndNextQValue[action] = 0
 
-    def getAction(self, state):
+            all = nextActionAndNextQValue.items()
+            values = [x[1] for x in all]
+            maxIndex = values.index(max(values))
+            #print "maxIndex=", maxIndex
+            currMaxAction2nd = all[maxIndex]
 
-        legalActions = self.getLegalActions(state)
-        currBestAction = None
-        currBestValue = float('-inf')
-        prob = self.epsilon
+            print "currMaxAction (2nd)=", currMaxAction2nd
 
-        actLst = []
-        valLst = []
+            r = self.getReward(self.currState, currMaxAction[0], nextState)
 
-        if len(legalActions) == 0:
-            print "no legal actions available"
-        else:
-            if self.flipCoin(prob):
-                currBestAction = random.choice(legalActions)
-            else:
-                for action in legalActions:
-                    valLst.append(self.getQValue(state, action) )
-                    actLst.append(action)
-                    if len(valLst) == 0:
-                        currBestAction = random.choice(actLst)
-                    else:
-                        currMax = float('-inf')
-                        currAct = None
-                        currIdx = -1
-                        for i in range(0, len(valLst), 1):
-                            if currMax < valLst[i]:
-                                currMax = valLst[i]
-                                currIdx = i
-                                currAct = actLst[i]
-                            currBestAction = currAct
-                            currBestValue = currMax
-                            if currIdx == -1:
-                                print "Uh-oh, correct action was never updated in loop"
+            sample = r + (self.gamma * nextActionAndNextQValue[currMaxAction2nd[0]])
 
-        return currBestAction
+            self.qvalues[(self.currState, currMaxAction[0])] = \
+                (1 - self.alpha) * (self.qvalues[(self.currState, currMaxAction[0])] if (self.currState, currMaxAction[0]) in self.qvalues else 0) + self.alpha * sample
+
+            #print "qvalue=", self.qvalues[(self.currState, currMaxAction[0])]
+            print "qvalues=", self.qvalues
+            print "currState=", self.currState
+            print "nextState=", nextState
+
+            self.currState = nextState
+
+        self.currState = self.getStartState()
 
 
-    def update(self, state, action, nextState, reward):
+# --- test ---
+learning = Learning()
 
-        prevSquare = self.values[state]
-        prevWedge = 0.0
-        if not prevSquare == 0:
-            prevWedge = prevSquare.values[action]
+for x in range(500):
+    learning.qLearning()
 
-        nextWedge = reward + (self.discount * self.computeValueFromQValues(nextState) )
+World.global_player.destroy()
 
-        if not prevSquare == 0:
-            self.values[state].values[action] = self.computationHelper(prevWedge, nextWedge)
-        else:
-            nextSquare = dict() #util.Counter()
-            nextSquare[action] = self.computationHelper(prevWedge, nextWedge)
-            self.values[state] = nextSquare
-
-
-
-    def computationHelper(self, oldVal, newVal):
-        return ((1 - self.alpha) * oldVal) + (self.alpha * newVal)
-
-
-    def getPolicy(self, state):
-        return self.computeActionFromQValues(state)
-
-
-    def getValue(self, state):
-        return self.computeValueFromQValues(state)
-
-
-    def flipCoin(self, p):
-        r = random.random()
-        return r < p
-
-
-    def getLegalActions(self, state):
-        """
-          Get the actions available for a given
-          state. This is what you should use to
-          obtain legal actions for a state
-        """
-        return self.actionFn(state) #FIXME

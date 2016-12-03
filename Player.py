@@ -54,7 +54,7 @@ class Note:
 
 class Player:
 
-    def __init__(self, port, instrument = Instrument.GRAND_PIANO, velocity = 127, sleepDuration = 1.0):
+    def __init__(self, port, instrument = Instrument.GRAND_PIANO, velocity = 127, sleepDuration = 0.001):
         self.instrument = instrument # the instrument used
         self.velocity = velocity # don't touch this
         self.sleepDuration = sleepDuration #how long the program pauses between notes

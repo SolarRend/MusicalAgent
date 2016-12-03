@@ -145,6 +145,7 @@ class MusicWorld:
 
         return bounty
 
+"""
 
 scaleList = ["C", "D", "E", "F", "G", "A", "B"]
 
@@ -175,3 +176,4 @@ print "currState:"
 print currState
 
 global_player.destroy()
+"""
