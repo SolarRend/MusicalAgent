@@ -21,8 +21,16 @@ class MusicWorld:
         self.terminalState = (None, 15)
 
         # scale that the agent is trying to learn
-        # contains 7 elements which are notes
-        self.goalScale = scale
+        # contains 14 elements which are notes
+        self.goalScale = list(scale)
+
+        #copy decrescendo
+        self.goalScale.append(scale[0])
+        tmpScale = scale[::-1]
+        for note in tmpScale:
+            self.goalScale.append(note)
+
+
 
         # getting 180 states into list
         self.stateSpace = self.initStateSpace()
@@ -96,23 +104,24 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action):
+    def takeAction(self, currState, action, play):
 
         # finish action
         if (action[0] != "finish"):
+            if play:
 
-            try:
-                #peak of crescendo play next octave
-                if action[1][1] == 7:
-                    octave = 5
-                else:
-                    octave = 4
+                try:
+                    #peak of crescendo play next octave
+                    if action[1][1] == 7:
+                        octave = 5
+                    else:
+                        octave = 4
 
-                #play note
-                global_player.playNote(action[1][0], octave)
+                    #play note
+                    global_player.playNote(action[1][0], octave)
 
-            except KeyboardInterrupt:
-                global_player.destroy()
+                except KeyboardInterrupt:
+                    global_player.destroy()
 
         return action[1]
 
@@ -130,19 +139,64 @@ class MusicWorld:
 
 
 
-        #collect massive reward for finishing scale crescendo + decrescendo
+        #collect massive reward for finishing scale crescendo + decrescendo AND previous note was ending note
         if  (action[0] == "finish"):
-             bounty += 75
+
+            if prevNotePlayed == self.goalScale[14]:
+                bounty += 75
+            else:
+                bounty -= 75
+
+        # not is in the scale, and is out of sequence
+        if (currNotePlayed in self.goalScale and currNotePlayed != self.goalScale[currNumOfNotesPlayed]):
+            bounty -= 800
 
         #receive massive penalty for playing out of number sequence
         if (currNumOfNotesPlayed != prevNumOfNotesPlayed+1):
-            bounty += -100
+            bounty += -1600
 
         #recive penalty for not not being in scale
         # **this is where differently weighted penalties will take place **
         if (currNotePlayed not in self.goalScale):
             bounty += -50
 
+        #print "mod test: ", self.goalScale[prevNumOfNotesPlayed%7]
+
+        """
+        if currNotePlayed in self.goalScale:
+
+            idx = self.goalScale.index(currNumOfNotesPlayed)
+
+            print "idx=", idx
+            print "prevNotePlayed=", prevNotePlayed, " =? ", "goalScale[idx]=", self.goalScale[idx-1]
+            print "currNotePlayed=", currNotePlayed
+
+            # correct note in the scale, and is played in sequence
+            if ((prevNotePlayed == self.goalScale[idx-1] or (prevNotePlayed == None and self.goalScale[0] == currNotePlayed)) and
+                        currNumOfNotesPlayed == prevNumOfNotesPlayed + 1):
+                bounty += 500
+                print "collected LARGE reward"
+                print "prevNotePlayed=", prevNotePlayed
+                print "currNotePlayed=", currNotePlayed
+
+            """
+            #print ""
+
+        #print "prevNotePlayed=", prevNotePlayed
+        #print "currNotePlayed=", currNotePlayed
+
+        if currNotePlayed in self.goalScale:
+            if (currNumOfNotesPlayed == prevNumOfNotesPlayed + 1):
+                if currNotePlayed == self.goalScale[currNumOfNotesPlayed]:
+                    if prevNotePlayed == None and self.goalScale[0] == currNotePlayed:
+                        bounty += 50
+                        #print "collected large reward: state=", state, "statePrime=", statePrime
+                    elif prevNotePlayed == self.goalScale[currNumOfNotesPlayed-1]:
+                        bounty += 50
+                        #print "collected large reward (elif): state=", state, "statePrime=", statePrime
+
+
+        #print "total reward=", bounty
         return bounty
 
 """
