@@ -38,5 +38,5 @@ class LilyPy:
             for i in range(octave):
                 octaveRepresentation += ","
 
-        #print note + octaveRepresentation, "--> file"
+        print note + octaveRepresentation, "--> file"
         self.file.write(note.lower() + octaveRepresentation + " ")

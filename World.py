@@ -184,6 +184,10 @@ class MusicWorld:
                 time.sleep(0.5)
                 global_player.playNote(action[1][0], 5, tempo * 2, Player.Instrument.VIOLA)
                 global_player2.playNote(action[1][0], 5 + 1, tempo * 2, Player.Instrument.GRAND_PIANO)
+                time.sleep(2.0) # give the reads time to exit
+
+                self.lilyPy.file.write("\n}")
+                self.lilyPy.file.close()
             except:
                 global_player.destroy()
                 global_player2.destroy()
