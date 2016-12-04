@@ -14,8 +14,9 @@ def listen():
 
 try:
 
-    scale = ["C", "D", "E", "F", "G", "A", "B"]#listen()
+    #scale = ["C", "D", "E", "F", "G", "A", "B"]#listen()
     #scale = ["C", "E", "G", "B", "D", "F", "A"]
+    scale = ["E", "F#", "G#", "A", "B", "C#", "D#"] #E Major
 
     xavier = Learning.Learning(scale)
 
@@ -25,9 +26,9 @@ try:
             xavier.qLearn(True, 0.05)
         elif x % 250 == 0:
             if random.random() > 0.5:
-                xavier.qLearn(True, 0.1)
+                xavier.qLearn(True, 0.07)
             else:
-                xavier.qLearn(True, 0.2)
+                xavier.qLearn(True, 0.1)
         else:
             xavier.qLearn(False, None)
         print "x=", x

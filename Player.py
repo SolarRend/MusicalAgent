@@ -51,6 +51,18 @@ class Note:
     A_5 = 81
     A_SHARP_5 = 82
     B_5 = 83
+    C_6 = 84
+    C_SHARP_6 = 85
+    D_6 = 86
+    D_SHARP_6 = 87
+    E_6 = 88
+    F_6 = 89
+    F_SHARP_6 = 90
+    G_6 = 91
+    G_SHARP_6 = 92
+    A_6 = 93
+    A_SHARP_6 = 94
+    B_6 = 95
 
 
 class Player:
@@ -125,6 +137,30 @@ class Player:
             currNote = Note.A_SHARP_5
         elif note == "B" and octave == 5:
             currNote = Note.B_5
+        elif note == "C" and octave == 6:
+            currNote = Note.C_6
+        elif note == "C#" and octave == 6:
+            currNote = Note.C_SHARP_6
+        elif note == "D" and octave == 6:
+            currNote = Note.D_6
+        elif note == "D#" and octave == 6:
+            currNote = Note.D_SHARP_6
+        elif note == "E" and octave == 6:
+            currNote = Note.E_6
+        elif note == "F" and octave == 6:
+            currNote = Note.F_6
+        elif note == "F#" and octave == 6:
+            currNote = Note.F_SHARP_6
+        elif note == "G" and octave == 6:
+            currNote = Note.G_6
+        elif note == "G#" and octave == 6:
+            currNote = Note.G_SHARP_6
+        elif note == "A" and octave == 6:
+            currNote = Note.A_6
+        elif note == "A#" and octave == 6:
+            currNote = Note.A_SHARP_6
+        elif note == "B" and octave == 6:
+            currNote = Note.B_6
         else:
             print "ERROR: using default of middle-C"
             currNote = Note.C_4
