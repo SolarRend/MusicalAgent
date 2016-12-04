@@ -42,7 +42,7 @@ try:
         state = xavier.getStartState()
 
         while state != xavier.getTerminalState():
-            tempo = 0.5
+            tempo = 0.3
             print "state: ", state
             state = xavier.takeAction(state, xavier.computeAction(state, r), True, False, tempo)
 
