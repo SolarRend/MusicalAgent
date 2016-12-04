@@ -112,14 +112,15 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, play):
+    def takeAction(self, currState, action, shouldPlay, isTraining, tempo):
 
         # finish action
         if (action[0] != "finish"):
-            if play:
+            if shouldPlay:
+
 
                 # store the first note played
-                if self.firstPerformanceNote == "":
+                if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
 
                 #print "play: ", self.firstPerformanceNote
@@ -170,6 +171,11 @@ class MusicWorld:
 
                     time.sleep(2.0)
 
+<<<<<<< HEAD
+=======
+                    #play note
+                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
+>>>>>>> e1b99656769dff0f525169033729d57788468120
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 
