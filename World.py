@@ -110,14 +110,15 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, play):
+    def takeAction(self, currState, action, shouldPlay, isTraining):
 
         # finish action
         if (action[0] != "finish"):
-            if play:
+            if shouldPlay:
+
 
                 # store the first note played
-                if self.firstPerformanceNote == "":
+                if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
 
                 print "play: ", self.firstPerformanceNote
@@ -150,6 +151,8 @@ class MusicWorld:
                 elif self.firstPerformanceNote == "B" and action[1][1] >= 1 and action[1][1] <= 13:
                     octave = 5
                 elif self.firstPerformanceNote == "B":
+                    octave = 4
+                else:
                     octave = 4
 
 
