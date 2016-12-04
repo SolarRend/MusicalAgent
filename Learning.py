@@ -41,7 +41,7 @@ class Learning(World.MusicWorld):
         self.file = open("log", "w")
 
 
-    def qLearn(self, shouldPlay):
+    def qLearn(self, shouldPlay, tempo):
 
         while self.currState != self.getTerminalState():
             # get the list of available actions
@@ -73,7 +73,7 @@ class Learning(World.MusicWorld):
             #if r < self.epsilon:
             #    nextState = self.takeAction(self.currState, random.choice(actions))
             #else:
-            nextState = self.takeAction(self.currState, currMaxAction[0], shouldPlay, True)
+            nextState = self.takeAction(self.currState, currMaxAction[0], shouldPlay, True, tempo)
             #print "nextState (real)=", nextState
 
             nextActions = self.getLegalActions(nextState)

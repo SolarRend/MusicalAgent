@@ -110,7 +110,7 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, shouldPlay, isTraining):
+    def takeAction(self, currState, action, shouldPlay, isTraining, tempo):
 
         # finish action
         if (action[0] != "finish"):
@@ -160,7 +160,7 @@ class MusicWorld:
 
 
                     #play note
-                    global_player.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
+                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 
