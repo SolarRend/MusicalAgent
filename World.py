@@ -7,9 +7,12 @@ Authors: James Kuczynski <jkuczyns@cs.uml.edu>
 
 import random
 import Player
+import time
+import Notes
 import LilyPy
 # create audio player; use audio port 3
 global_player = Player.Player(3)
+global_player2 = Player.Player(2)
 
 class MusicWorld:
 
@@ -27,6 +30,8 @@ class MusicWorld:
         # scale that the agent is trying to learn
         # contains 14 elements which are notes
         self.goalScale = list(scale)
+
+        self.counterpoint = Notes.Notes()
 
         #copy decrescendo
         self.goalScale.append(scale[0])
@@ -110,7 +115,7 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, shouldPlay, isTraining, tempo):
+    def takeAction(self, currState, action, shouldPlay, isTraining, tempo, isCoda = False):
 
         # finish action
         if (action[0] != "finish"):
@@ -120,8 +125,7 @@ class MusicWorld:
                 # store the first note played
                 if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
-
-                print "play: ", self.firstPerformanceNote
+                    print "in the key of: ", self.firstPerformanceNote
 
 
                 if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:
@@ -158,14 +162,32 @@ class MusicWorld:
 
                 try:
 
-
+                    tupleOfTuples = self.counterpoint.getCounterpoint(action[1][0], octave)
                     #play note
-                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
+                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.VIOLA)
+                    global_player2.playNote(tupleOfTuples[0][0], tupleOfTuples[0][1], tempo/2.0, Player.Instrument.GRAND_PIANO)
+                    time.sleep(tempo/2.0)
+                    global_player2.playNote(tupleOfTuples[1][0], tupleOfTuples[1][1], tempo / 2.0, Player.Instrument.GRAND_PIANO)
+                    time.sleep(tempo/2.0)
+
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 
                 except KeyboardInterrupt:
                     global_player.destroy()
+                    global_player2.destroy()
+
+
+        if isCoda:
+            try:
+                print "playing coda..."
+                time.sleep(0.5)
+                global_player.playNote(action[1][0], 5, tempo * 2, Player.Instrument.VIOLA)
+                global_player2.playNote(action[1][0], 5 + 1, tempo * 2, Player.Instrument.GRAND_PIANO)
+            except:
+                global_player.destroy()
+                global_player2.destroy()
+
 
         return action[1]
 

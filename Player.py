@@ -15,6 +15,7 @@
 
 import pygame.midi
 import time
+import threading
 
 
 # pygame uses integers (0-127 inclusive) to represent instruments.
@@ -126,12 +127,21 @@ class Player:
             print "ERROR: using default of middle-C"
             currNote = Note.C_4
 
+
+        self.currNote = currNote
+        self.sleepDuration = sleepDuration
+
+        t = threading.Thread(target=self.play)
+        t.start()
+
+
+    def play(self):
         # start playing the note
         # pause for a duration to let the note play
         # stop the note
-        self.player.note_on(currNote, self.velocity)
-        time.sleep(sleepDuration)
-        self.player.note_off(currNote, self.velocity)
+        self.player.note_on(self.currNote, self.velocity)
+        time.sleep(self.sleepDuration)
+        self.player.note_off(self.currNote, self.velocity)
 
 
     # delete/shut down the audio player
