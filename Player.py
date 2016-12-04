@@ -68,11 +68,13 @@ class Player:
         self.player.set_instrument(self.instrument)
 
 
-    def playNote(self, note, octave, sleepDuration, instrument):
+    def playNote(self, note, octave, sleepDuration, instrument, volume = 127):
 
         if self.instrument != instrument:
             self.player.set_instrument(instrument)
             self.instrument = instrument
+
+        self.velocity = volume
 
         # map string representation to "enum"
         if note == "C" and octave == 4:
@@ -131,8 +133,11 @@ class Player:
         self.currNote = currNote
         self.sleepDuration = sleepDuration
 
-        t = threading.Thread(target=self.play)
-        t.start()
+        #self.t = threading.Thread(target=self.play)
+        #self.t.start()
+        self.play()
+
+        #t.join(self.sleepDuration)
 
 
     def play(self):
@@ -142,6 +147,7 @@ class Player:
         self.player.note_on(self.currNote, self.velocity)
         time.sleep(self.sleepDuration)
         self.player.note_off(self.currNote, self.velocity)
+
 
 
     # delete/shut down the audio player

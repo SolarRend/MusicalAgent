@@ -161,18 +161,21 @@ class MusicWorld:
                     octave = 4
 
                 try:
+                    if not isTraining:
+                        tupleOfTuples = self.counterpoint.getCounterpoint(action[1][0], octave)
+                        # play note
+                        global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO) #viola
+                        global_player2.playNote(tupleOfTuples[0][0], tupleOfTuples[0][1], tempo / 2.0,
+                                                Player.Instrument.GRAND_PIANO, 90)
+                        time.sleep(tempo / 2.0)
+                        global_player2.playNote(tupleOfTuples[1][0], tupleOfTuples[1][1], tempo / 2.0,
+                                                Player.Instrument.GRAND_PIANO, 90)
+                        time.sleep(tempo / 2.0)
 
-                    tupleOfTuples = self.counterpoint.getCounterpoint(action[1][0], octave)
-                    # play note
-                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.VIOLA)
-                    global_player2.playNote(tupleOfTuples[0][0], tupleOfTuples[0][1], tempo / 2.0,
-                                            Player.Instrument.GRAND_PIANO)
-                    time.sleep(tempo / 2.0)
-                    global_player2.playNote(tupleOfTuples[1][0], tupleOfTuples[1][1], tempo / 2.0,
-                                            Player.Instrument.GRAND_PIANO)
-                    time.sleep(tempo / 2.0)
-
-                    self.lilyPy.toLy((action[1][0], octave))
+                        self.lilyPy.toLy((action[1][0], octave))
+                    else:
+                        global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
+                        time.sleep(tempo)
 
 
                 except KeyboardInterrupt:
