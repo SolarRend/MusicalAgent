@@ -8,6 +8,7 @@ Authors: James Kuczynski <jkuczyns@cs.uml.edu>
 import random
 import Player
 import time
+import Notes
 import LilyPy
 # create audio player; use audio port 3
 global_player = Player.Player(3)
@@ -29,6 +30,9 @@ class MusicWorld:
         # scale that the agent is trying to learn
         # contains 14 elements which are notes
         self.goalScale = list(scale)
+
+        #voices
+        self.counterpoint = Notes.Notes()
 
         #copy decrescendo
         self.goalScale.append(scale[0])

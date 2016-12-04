@@ -194,10 +194,10 @@ state = learning.getStartState()
 
 while state != learning.getTerminalState():
     print "state=", state
-    state = learning.takeAction(state, learning.computeAction(state, 0)
+    state = learning.computeAction(state, 0.0)
 
 print "about to call coda"
-learning.takeAction(state, learning.computeAction(state, 0)
+learning.computeAction(state, 0.0)
 print "called coda"
 
 learning.file.write("qvalues=")
