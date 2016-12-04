@@ -121,7 +121,7 @@ class MusicWorld:
                 if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
 
-                print "play: ", self.firstPerformanceNote
+                #print "play: ", self.firstPerformanceNote
 
 
                 if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:
@@ -189,20 +189,23 @@ class MusicWorld:
             if prevNotePlayed == self.goalScale[14]:
                 bounty += 75
             else:
-                bounty -= 75
+                bounty += -75
 
-        # not is in the scale, and is out of sequence
+        # note is in the scale, and is out of sequence
         if (currNotePlayed in self.goalScale and currNotePlayed != self.goalScale[currNumOfNotesPlayed]):
-            bounty -= 800
+            bounty += -500
 
         #receive massive penalty for playing out of number sequence
         if (currNumOfNotesPlayed != prevNumOfNotesPlayed+1):
-            bounty += -1600
+            bounty += -1000
 
-        #recive penalty for not not being in scale
+        #receive penalty for not not being in scale
         # **this is where differently weighted penalties will take place **
         if (currNotePlayed not in self.goalScale):
             bounty += -50
+
+
+
 
         #print "mod test: ", self.goalScale[prevNumOfNotesPlayed%7]
 
@@ -229,6 +232,7 @@ class MusicWorld:
         #print "prevNotePlayed=", prevNotePlayed
         #print "currNotePlayed=", currNotePlayed
 
+        # correct note in the scale, and is played in sequence
         if currNotePlayed in self.goalScale:
             if (currNumOfNotesPlayed == prevNumOfNotesPlayed + 1):
                 if currNotePlayed == self.goalScale[currNumOfNotesPlayed]:
