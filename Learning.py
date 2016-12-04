@@ -1,170 +1,62 @@
-##############################################################################
-##
-## File: Learning.py
-## Authors:
-## File Description: Q-Learning agent (based on the Pacman one).
-##                   util.Counter objects have been converted to dict ones,
-##                   some code from the parent class learningAgent has
-##                   been included.
-##
-## Created: 11/26/2016
-## Last Modified 11/26/2016
-##
-##############################################################################
+class NoteOp:
 
-import random
-import World
-import time
+    def __init__(self, primary, other):
 
+        # on-beat compatable note
+        self.primary = primary
 
-class Learning(World.MusicWorld):
+        # off-beat optional notes
+        self.other = other
 
-    def __init__(self, scale = ["C", "D", "E", "F", "G", "A", "B"], alpha=0.5, epsilon=0.0, gamma=1.0, numTraining = 10):
+class Notes:
 
-        #set the goal scale
-        #super(Learning, self).__init__(scale)
-        World.MusicWorld.__init__(self, scale)
+    def __init__(self):
+        print ""
 
-        self.values = {} #util.Counter()  # key, square; each square has four wedges
+    def getLegalNotes(self, note_letters, octave):
+        legalNoteArr = []
 
-        self.alpha = float(alpha)
-        self.epsilon = float(epsilon)
-        self.gamma = float(gamma)
-        self.numTraining = int(numTraining)
+        # 1st, 3rd, 5th
+        # one step up/down
 
-        #current state
-        self.currState = self.getStartState()
+        #FIXME: assumes no sharps in key signature
 
-        #list of q-values
-        self.qvalues = {}
-
-        self.file = open("log", "w")
-
-
-    def qLearn(self, shouldPlay, tempo):
-
-        while self.currState != self.getTerminalState():
-            # get the list of available actions
-            actions = self.getLegalActions(self.currState)
-
-            actionAndQValue = {}
-
-            #randomly choose an action
-            for action in actions:
-                if (self.currState, action) in self.qvalues:
-                    actionAndQValue[action] = self.qvalues[(self.currState, action)]
-                else:
-                    actionAndQValue[action] = 0
-
-            #TODO: choose BEST action
-            #currAction = random.choice(actions)
-
-            all = actionAndQValue.items()
-            values = [x[1] for x in all]
-            maxIndex = values.index(max(values))
-
-            currMaxAction = all[maxIndex]
-
-
-            #print "currMaxActino=", currMaxAction[0]
-
-            #get the next state
-            r = random.random()
-            #if r < self.epsilon:
-            #    nextState = self.takeAction(self.currState, random.choice(actions))
-            #else:
-            nextState = self.takeAction(self.currState, currMaxAction[0], shouldPlay, True, tempo)
-            #print "nextState (real)=", nextState
-
-            nextActions = self.getLegalActions(nextState)
-
-            nextActionAndNextQValue = {}
-
-            for action in nextActions:
-                if (nextState, action) in self.qvalues:
-                    nextActionAndNextQValue[action] = self.qvalues[(nextState, action)]
-                else:
-                    nextActionAndNextQValue[action] = 0
-
-            all = nextActionAndNextQValue.items()
-            values = [x[1] for x in all]
-            maxIndex = values.index(max(values))
-            #print "maxIndex=", maxIndex
-            currMaxAction2nd = all[maxIndex]
-
-            #print "currMaxAction (2nd)=", currMaxAction2nd
-
-            r = self.getReward(self.currState, currMaxAction[0], nextState)
-
-            sample = r + (self.gamma * nextActionAndNextQValue[currMaxAction2nd[0]])
-
-            self.qvalues[(self.currState, currMaxAction[0])] = \
-                (1 - self.alpha) * (self.qvalues[(self.currState, currMaxAction[0])] if (self.currState, currMaxAction[0]) in self.qvalues else 0) + self.alpha * sample
-
-            #print "qvalue=", self.qvalues[(self.currState, currMaxAction[0])]
-            #print "qvalues=", self.qvalues
-
-            #print "currState=", self.currState
-            #print "nextState=", nextState
-
-            self.currState = nextState
-
-
-        self.currState = self.getStartState()
-
-    def computeBestAction(self, state):
-
-
-        # get all legal actions from state
-        actions = self.getLegalActions(state)
-        actionAndQValue = {}
-
-        # randomly choose an action
-        for action in actions:
-            if (state, action) in self.qvalues:
-                actionAndQValue[action] = self.qvalues[(state, action)]
-            else:
-                actionAndQValue[action] = 0
-
-        # TODO: choose BEST action
-        # currAction = random.choice(actions)
-
-        all = actionAndQValue.items()
-        values = [x[1] for x in all]
-        maxIndex = values.index(max(values))
-        currMaxAction = all[maxIndex]
-
-        return currMaxAction[0]
-
-        # do what be did before...
-
-
-# --- test ---
-'''
-#scale = ["C", "D", "E", "F", "G", "A", "B"] #c Major
-#scale = ["C", "D", "D#", "F", "G", "G#", "A#"] #c minor
-#scale = ["D", "E", "F#", "G", "A", "B", "C#"] #D Major
-scale = ["E", "F#", "G#", "A", "B", "C#", "D#"] #E Major
-learning = Learning(scale)
-#iter = 0
-for x in range(2000):
-    learning.qLearning()
-    #iter += iter + 1
-    #time.sleep(0.010)
-    print "x=", x
-
-state = learning.getStartState()
-
-while state != learning.getTerminalState():
-    print "state=", state
-    state = learning.takeAction(state, learning.computeBestAction(state), True)
-
-
-learning.file.write("qvalues=")
-learning.file.write(str(learning.qvalues))
-learning.file.write("\n")
-print "qvalues="
-print learning.qvalues
-
-World.global_player.destroy()
-'''
+        if note_letters == "C":
+            #                           primary             option 1            option 2
+            legalNoteArr.append(NoteOp(("C", octave + 1), [("D", octave + 1), ("B", octave + 1)]))
+            legalNoteArr.append(NoteOp(("E", octave + 1), [("F", octave + 1), ("D", octave + 1)]))
+            legalNoteArr.append(NoteOp(("G", octave + 1), [("A", octave + 1), ("F", octave + 1)]))
+        elif note_letters == "C#":
+            x = 1
+        elif note_letters == "D":
+            legalNoteArr.append(NoteOp(("D", octave + 1), [("E", octave + 1), ("C", octave + 1)]))
+            legalNoteArr.append(NoteOp(("F", octave + 1), [("G", octave + 1), ("E", octave + 1)]))
+            legalNoteArr.append(NoteOp(("A", octave + 1), [("B", octave + 1), ("G", octave + 1)]))
+        elif note_letters == "D#":
+            x = 1
+        elif note_letters == "E":
+            legalNoteArr.append(NoteOp(("E", octave + 1), [("F", octave + 1), ("D", octave + 1)]))
+            legalNoteArr.append(NoteOp(("G", octave + 1), [("A", octave + 1), ("F", octave + 1)]))
+            legalNoteArr.append(NoteOp(("B", octave + 1), [("C", octave + 1), ("A", octave + 1)]))
+        elif note_letters == "F":
+            legalNoteArr.append(NoteOp(("F", octave + 1), [("G", octave + 1), ("E", octave + 1)]))
+            legalNoteArr.append(NoteOp(("A", octave + 1), [("B", octave + 1), ("G", octave + 1)]))
+            legalNoteArr.append(NoteOp(("C", octave + 1), [("D", octave + 1), ("B", octave + 1)]))
+        elif note_letters == "F#":
+            x = 1
+        elif note_letters == "G":
+            legalNoteArr.append(NoteOp(("G", octave + 1), [("A", octave + 1), ("F", octave + 1)]))
+            legalNoteArr.append(NoteOp(("B", octave + 1), [("C", octave + 1), ("A", octave + 1)]))
+            legalNoteArr.append(NoteOp(("D", octave + 1), [("E", octave + 1), ("C", octave + 1)]))
+        elif note_letters == "G#":
+            x = 1
+        elif note_letters == "A":
+            legalNoteArr.append(NoteOp(("A", octave + 1), [("B", octave + 1), ("G", octave + 1)]))
+            legalNoteArr.append(NoteOp(("C", octave + 1), [("D", octave + 1), ("B", octave + 1)]))
+            legalNoteArr.append(NoteOp(("E", octave + 1), [("F", octave + 1), ("D", octave + 1)]))
+        elif note_letters == "A#":
+            x = 1
+        elif note_letters == "B":
+            legalNoteArr.append(NoteOp(("B", octave + 1), [("C", octave + 1), ("A", octave + 1)]))
+            legalNoteArr.append(NoteOp(("D", octave + 1), [("E", octave + 1), ("C", octave + 1)]))
+            legalNoteArr.append(NoteOp(("F", octave + 1), [("G", octave + 1), ("E", octave + 1)]))

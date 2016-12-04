@@ -271,4 +271,3 @@ class PitchDetection:
             stream.close()
             self.p.terminate()
             return None
-
