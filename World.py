@@ -126,7 +126,7 @@ class MusicWorld:
                 # store the first note played
                 if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
-                    print "play: ", self.firstPerformanceNote
+                    #print "play: ", self.firstPerformanceNote
 
 
                 if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:

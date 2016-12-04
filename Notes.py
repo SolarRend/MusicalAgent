@@ -13,7 +13,7 @@ class NoteOp:
 class Notes:
 
     def __init__(self):
-        print ""
+        return
 
     def getLegalNotes(self, note_letters, octave):
         self.legalNoteArr = []
@@ -78,10 +78,10 @@ class Notes:
         self.getLegalNotes(note_letters, octave)
 
         primaryAnd2ndOpt = random.choice(self.legalNoteArr)
-        print "primaryAnd2ndOpt=", primaryAnd2ndOpt.primary, primaryAnd2ndOpt.other
+        #print "primaryAnd2ndOpt=", primaryAnd2ndOpt.primary, primaryAnd2ndOpt.other
         primaryTuple = primaryAnd2ndOpt.primary
         opt = random.choice(primaryAnd2ndOpt.other)
 
-        print "Accompaniment: ", primaryTuple[0], opt[0]
+        #print "Accompaniment: ", primaryTuple[0], opt[0]
 
         return (primaryTuple, opt)

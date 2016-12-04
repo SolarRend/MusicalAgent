@@ -35,14 +35,13 @@ try:
 
     # create modified qValue list for exploration
     xavier.createExplorationQvalues()
-    r = 1 #random.random()
+    r = 0 #random.random()
     print "epsilon: ", r
     while True:
 
         state = xavier.getStartState()
 
         while state != xavier.getTerminalState():
-            r = random.random()
             tempo = 0.5
             print "state: ", state
             state = xavier.takeAction(state, xavier.computeAction(state, r), True, False, tempo)
