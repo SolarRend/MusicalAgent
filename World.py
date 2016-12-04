@@ -7,12 +7,9 @@ Authors: James Kuczynski <jkuczyns@cs.uml.edu>
 
 import random
 import Player
-import time
-import Notes
 import LilyPy
 # create audio player; use audio port 3
 global_player = Player.Player(3)
-global_player2 = Player.Player(2)
 
 class MusicWorld:
 
@@ -30,8 +27,6 @@ class MusicWorld:
         # scale that the agent is trying to learn
         # contains 14 elements which are notes
         self.goalScale = list(scale)
-
-        self.counterpoint = Notes.Notes()
 
         #copy decrescendo
         self.goalScale.append(scale[0])
@@ -115,7 +110,7 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, shouldPlay, isTraining, tempo, isCoda = False):
+    def takeAction(self, currState, action, shouldPlay, isTraining, tempo):
 
         # finish action
         if (action[0] != "finish"):
@@ -125,7 +120,8 @@ class MusicWorld:
                 # store the first note played
                 if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
-                    print "in the key of: ", self.firstPerformanceNote
+
+                #print "play: ", self.firstPerformanceNote
 
 
                 if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:
@@ -162,36 +158,14 @@ class MusicWorld:
 
                 try:
 
-                    tupleOfTuples = self.counterpoint.getCounterpoint(action[1][0], octave)
-                    #play note
-                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.VIOLA)
-                    global_player2.playNote(tupleOfTuples[0][0], tupleOfTuples[0][1], tempo/2.0, Player.Instrument.GRAND_PIANO)
-                    time.sleep(tempo/2.0)
-                    global_player2.playNote(tupleOfTuples[1][0], tupleOfTuples[1][1], tempo / 2.0, Player.Instrument.GRAND_PIANO)
-                    time.sleep(tempo/2.0)
 
+                    #play note
+                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 
                 except KeyboardInterrupt:
                     global_player.destroy()
-                    global_player2.destroy()
-
-
-        if isCoda:
-            try:
-                print "playing coda..."
-                time.sleep(0.5)
-                global_player.playNote(action[1][0], 5, tempo * 2, Player.Instrument.VIOLA)
-                global_player2.playNote(action[1][0], 5 + 1, tempo * 2, Player.Instrument.GRAND_PIANO)
-                time.sleep(2.0) # give the reads time to exit
-
-                self.lilyPy.file.write("\n}")
-                self.lilyPy.file.close()
-            except:
-                global_player.destroy()
-                global_player2.destroy()
-
 
         return action[1]
 
@@ -215,20 +189,23 @@ class MusicWorld:
             if prevNotePlayed == self.goalScale[14]:
                 bounty += 75
             else:
-                bounty -= 75
+                bounty += -75
 
-        # not is in the scale, and is out of sequence
+        # note is in the scale, and is out of sequence
         if (currNotePlayed in self.goalScale and currNotePlayed != self.goalScale[currNumOfNotesPlayed]):
-            bounty -= 800
+            bounty += -500
 
         #receive massive penalty for playing out of number sequence
         if (currNumOfNotesPlayed != prevNumOfNotesPlayed+1):
-            bounty += -1600
+            bounty += -1000
 
-        #recive penalty for not not being in scale
+        #receive penalty for not not being in scale
         # **this is where differently weighted penalties will take place **
         if (currNotePlayed not in self.goalScale):
             bounty += -50
+
+
+
 
         #print "mod test: ", self.goalScale[prevNumOfNotesPlayed%7]
 
@@ -255,6 +232,7 @@ class MusicWorld:
         #print "prevNotePlayed=", prevNotePlayed
         #print "currNotePlayed=", currNotePlayed
 
+        # correct note in the scale, and is played in sequence
         if currNotePlayed in self.goalScale:
             if (currNumOfNotesPlayed == prevNumOfNotesPlayed + 1):
                 if currNotePlayed == self.goalScale[currNumOfNotesPlayed]:

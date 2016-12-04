@@ -14,10 +14,12 @@ def listen():
 
 try:
 
-    scale = listen()
+    scale = ["C", "D", "E", "F", "G", "A", "B"]#listen()
+    #scale = ["C", "E", "G", "B", "D", "F", "A"]
 
     xavier = Learning.Learning(scale)
 
+    # learning for 2k iterations
     for x in range(2000):
         if x > 0 and x < 30:
             xavier.qLearn(True, 0.05)
@@ -29,15 +31,23 @@ try:
         else:
             xavier.qLearn(False, None)
         print "x=", x
+    # agent is done learning
 
+    # create modified qValue list for exploration
+    xavier.createExplorationQvalues()
+    r = 1 #random.random()
+    print "epsilon: ", r
+    while True:
 
-    state = xavier.getStartState()
+        state = xavier.getStartState()
 
-    while state != xavier.getTerminalState():
-        print "state=", state
-        state = xavier.takeAction(state, xavier.computeBestAction(state), True, False, 1)
+        while state != xavier.getTerminalState():
+            r = random.random()
+            tempo = 0.5
+            print "state: ", state
+            state = xavier.takeAction(state, xavier.computeAction(state, r), True, False, tempo)
 
-    Learning.World.global_player.destroy()
+    #Learning.World.global_player.destroy()
 
 except KeyboardInterrupt:
     Learning.World.global_player.destroy()

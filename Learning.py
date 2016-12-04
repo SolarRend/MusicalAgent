@@ -19,7 +19,7 @@ import time
 
 class Learning(World.MusicWorld):
 
-    def __init__(self, scale = ["C", "D", "E", "F", "G", "A", "B"], alpha=0.5, epsilon=0.0, gamma=1.0, numTraining = 10):
+    def __init__(self, scale = ["C", "D", "E", "F", "G", "A", "B"], alpha=0.5, gamma=1.0, numTraining = 10):
 
         #set the goal scale
         #super(Learning, self).__init__(scale)
@@ -28,17 +28,20 @@ class Learning(World.MusicWorld):
         self.values = {} #util.Counter()  # key, square; each square has four wedges
 
         self.alpha = float(alpha)
-        self.epsilon = float(epsilon)
+        #self.epsilon = float(epsilon)
         self.gamma = float(gamma)
         self.numTraining = int(numTraining)
 
         #current state
         self.currState = self.getStartState()
 
-        #list of q-values
+        #dictionary of q-values
         self.qvalues = {}
 
-        self.file = open("log", "w")
+        #dictionary of absolute qValues
+        self.modQvalues = {}
+
+        #self.file = open("log", "w")
 
 
     def qLearn(self, shouldPlay, tempo):
@@ -56,8 +59,6 @@ class Learning(World.MusicWorld):
                 else:
                     actionAndQValue[action] = 0
 
-            #TODO: choose BEST action
-            #currAction = random.choice(actions)
 
             all = actionAndQValue.items()
             values = [x[1] for x in all]
@@ -112,31 +113,67 @@ class Learning(World.MusicWorld):
 
         self.currState = self.getStartState()
 
-    def computeBestAction(self, state):
+    def computeAction(self, state, epsilon):
 
 
         # get all legal actions from state
-        actions = self.getLegalActions(state)
+        legalActions = self.getLegalActions(state)
         actionAndQValue = {}
 
-        # randomly choose an action
-        for action in actions:
-            if (state, action) in self.qvalues:
-                actionAndQValue[action] = self.qvalues[(state, action)]
-            else:
-                actionAndQValue[action] = 0
+        r = random.random()
 
-        # TODO: choose BEST action
-        # currAction = random.choice(actions)
+        if epsilon <= r:
+            for action in legalActions:
+                if (state, action) in self.qvalues:
+                    actionAndQValue[action] = self.qvalues[(state, action)]
+                else:
+                    actionAndQValue[action] = 0
 
-        all = actionAndQValue.items()
-        values = [x[1] for x in all]
-        maxIndex = values.index(max(values))
-        currMaxAction = all[maxIndex]
+            all = actionAndQValue.items()
+            values = [x[1] for x in all]
+            maxIndex = values.index(max(values))
+            currMaxAction = all[maxIndex]
+
+        else:
+            for action in legalActions:
+                if (state, action) in self.modQvalues:
+                    actionAndQValue[action] = self.modQvalues[(state, action)]
+                else:
+                    actionAndQValue[action] = 0
+
+            all = actionAndQValue.items()
+            values = [x[1] for x in all]
+            maxIndex = values.index(max(values))
+            currMaxAction = all[maxIndex]
+            #print "deleted: ", (state, currMaxAction[0])
+            self.modQvalues[(state, currMaxAction[0])] = -1
+
+
+
+
+
 
         return currMaxAction[0]
 
-        # do what be did before...
+
+    def createExplorationQvalues(self):
+
+        for k,v in self.qvalues:
+            #print "k: ", k
+            #print "v: ", v
+            newQvalue = abs(self.qvalues[(k,v)])
+            if newQvalue <= 750:
+                self.modQvalues[(k,v)] = newQvalue
+            else:
+                self.modQvalues[(k, v)] = self.qvalues[(k,v)]
+
+            print k, v, self.modQvalues[(k, v)]
+
+
+
+    #def computeAction(self, state):
+
+
 
 
 # --- test ---
@@ -165,7 +202,7 @@ print "called coda"
 
 learning.file.write("qvalues=")
 learning.file.write(str(learning.qvalues))
-learning.file.write("\n")
+learning.file.write("")
 print "qvalues="
 print learning.qvalues
 
