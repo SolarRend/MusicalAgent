@@ -34,6 +34,8 @@ class MusicWorld:
         for note in tmpScale:
             self.goalScale.append(note)
 
+        #world stores the first audio note played
+        self.firstPerformanceNote = ""
 
 
         # getting 180 states into list
@@ -114,16 +116,48 @@ class MusicWorld:
         if (action[0] != "finish"):
             if play:
 
+                # store the first note played
+                if self.firstPerformanceNote == "":
+                    self.firstPerformanceNote = action[1][0]
+
+                print "play: ", self.firstPerformanceNote
+
+
+                if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:
+                    octave = 5
+                elif self.firstPerformanceNote == "C":
+                    octave = 4
+                elif self.firstPerformanceNote == "D" and action[1][1] >=6 and action[1][1] <= 8:
+                    octave = 5
+                elif self.firstPerformanceNote == "D":
+                    octave = 4
+                elif self.firstPerformanceNote == "E" and action[1][1] >=5 and action[1][1] <= 9:
+                    octave = 5
+                elif self.firstPerformanceNote == "E":
+                    octave = 4
+                elif self.firstPerformanceNote == "F" and action[1][1] >=4 and action[1][1] <= 10:
+                    octave = 5
+                elif self.firstPerformanceNote == "F":
+                    octave = 4
+                elif self.firstPerformanceNote == "G" and action[1][1] >=3 and action[1][1] <= 11:
+                    octave = 5
+                elif self.firstPerformanceNote == "G":
+                    octave = 4
+                elif self.firstPerformanceNote == "A" and action[1][1] >=2 and action[1][1] <= 12:
+                    octave = 5
+                elif self.firstPerformanceNote == "A":
+                    octave = 4
+                elif self.firstPerformanceNote == "B" and action[1][1] >= 1 and action[1][1] <= 13:
+                    octave = 5
+                elif self.firstPerformanceNote == "B":
+                    octave = 4
+
+
                 try:
-                    #peak of crescendo play next octave
-                    #FIXME: assumes C M/m scale
-                    if action[1][1] == 7:
-                        octave = 5
-                    else:
-                        octave = 4
+
 
                     #play note
-                    global_player.playNote(action[1][0], octave)
+                    global_player.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 

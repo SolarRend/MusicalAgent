@@ -67,7 +67,11 @@ class Player:
         self.player.set_instrument(self.instrument)
 
 
-    def playNote(self, note, octave):
+    def playNote(self, note, octave, sleepDuration, instrument):
+
+        if self.instrument != instrument:
+            self.player.set_instrument(instrument)
+            self.instrument = instrument
 
         # map string representation to "enum"
         if note == "C" and octave == 4:
@@ -126,7 +130,7 @@ class Player:
         # pause for a duration to let the note play
         # stop the note
         self.player.note_on(currNote, self.velocity)
-        time.sleep(self.sleepDuration)
+        time.sleep(sleepDuration)
         self.player.note_off(currNote, self.velocity)
 
 

@@ -140,10 +140,10 @@ class Learning(World.MusicWorld):
 
 
 # --- test ---
-scale = ["C", "D", "E", "F", "G", "A", "B"] #c Major
+#scale = ["C", "D", "E", "F", "G", "A", "B"] #c Major
 #scale = ["C", "D", "D#", "F", "G", "G#", "A#"] #c minor
-#scale = ["D", "E", "F#", "G", "A", "B", "C#"]
-#scale = ["E", "F#", "G#", "A", "B", "C#", "D#"] #E Major
+#scale = ["D", "E", "F#", "G", "A", "B", "C#"] #D Major
+scale = ["E", "F#", "G#", "A", "B", "C#", "D#"] #E Major
 learning = Learning(scale)
 #iter = 0
 for x in range(2000):
