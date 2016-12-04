@@ -7,12 +7,16 @@ Authors: James Kuczynski <jkuczyns@cs.uml.edu>
 
 import random
 import Player
+import LilyPy
 # create audio player; use audio port 3
 global_player = Player.Player(3)
 
 class MusicWorld:
 
     def __init__(self, scale):
+
+        # setup for print to file
+        self.lilyPy = LilyPy.LilyPy()
 
         # setting unique start state
         self.startState = (None, -1)
@@ -112,6 +116,7 @@ class MusicWorld:
 
                 try:
                     #peak of crescendo play next octave
+                    #FIXME: assumes C M/m scale
                     if action[1][1] == 7:
                         octave = 5
                     else:
@@ -119,6 +124,8 @@ class MusicWorld:
 
                     #play note
                     global_player.playNote(action[1][0], octave)
+                    self.lilyPy.toLy( (action[1][0], octave) )
+
 
                 except KeyboardInterrupt:
                     global_player.destroy()
