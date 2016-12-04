@@ -171,11 +171,10 @@ class MusicWorld:
 
                     time.sleep(2.0)
 
-<<<<<<< HEAD
-=======
+
                     #play note
                     global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
->>>>>>> e1b99656769dff0f525169033729d57788468120
+
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 

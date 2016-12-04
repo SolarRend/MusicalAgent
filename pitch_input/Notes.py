@@ -42,9 +42,9 @@ class MathNote:
         legalNoteArr = []
 
         if note_letters == "C":
-            legalNoteArr.append((("C", octave + 1), list(("D", octave + 1), (""))))
-            legalNoteArr.append((("E", octave + 1))
-            legalNoteArr.append((("G", octave + 1))
+            legalNoteArr.append((("C", octave + 1), list(("D", octave + 1), ("B", octave + 1))))
+            legalNoteArr.append((("E", octave + 1), ()))
+            legalNoteArr.append((("G", octave + 1), ()))
         elif note_letters == "C#":
             x = 1
         elif note_letters == "D":
