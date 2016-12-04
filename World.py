@@ -6,10 +6,12 @@ Authors: James Kuczynski <jkuczyns@cs.uml.edu>
 '''
 
 import random
+import  time
 import Player
 import LilyPy
 # create audio player; use audio port 3
 global_player = Player.Player(3)
+global_player2 = Player.Player(2)
 
 class MusicWorld:
 
@@ -120,7 +122,7 @@ class MusicWorld:
                 if self.firstPerformanceNote == "":
                     self.firstPerformanceNote = action[1][0]
 
-                print "play: ", self.firstPerformanceNote
+                #print "play: ", self.firstPerformanceNote
 
 
                 if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:
@@ -151,18 +153,29 @@ class MusicWorld:
                     octave = 5
                 elif self.firstPerformanceNote == "B":
                     octave = 4
+                else:
+                    octave = 4
 
 
                 try:
-
-
                     #play note
-                    global_player.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
+                    global_player.playNote(action[1][0], octave, 2.0, Player.Instrument.VIOLA)  # Player.Instrument.GRAND_PIANO
+                    global_player2.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
+                    time.sleep(0.25)
+                    global_player2.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
+                    time.sleep(0.25)
+                    global_player2.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
+                    time.sleep(0.25)
+                    global_player2.playNote(action[1][0], octave, 0.2, Player.Instrument.GRAND_PIANO)
+
+                    time.sleep(2.0)
+
                     self.lilyPy.toLy( (action[1][0], octave) )
 
 
                 except KeyboardInterrupt:
                     global_player.destroy()
+                    global_player2.destroy()
 
         return action[1]
 
