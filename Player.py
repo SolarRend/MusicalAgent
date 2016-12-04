@@ -154,6 +154,8 @@ class Player:
 
 
 # test case
+
+"""
 if __name__ == "__main__":
 
     player = Player(3, Instrument.GRAND_PIANO, 127, 0.15)
@@ -176,3 +178,5 @@ if __name__ == "__main__":
     except:
         # TODO: stop the current note(s)
         player.destroy() #speaker trouble if the program is killed without deleting the audio player
+
+"""
