@@ -177,7 +177,7 @@ class Learning(World.MusicWorld):
 
 
 # --- test ---
-#'''
+'''
 scale = ["C", "D", "E", "F", "G", "A", "B"] #c Major
 #scale = ["C", "D", "D#", "F", "G", "G#", "A#"] #c minor
 #scale = ["D", "E", "F#", "G", "A", "B", "C#"] #D Major
@@ -194,10 +194,10 @@ state = learning.getStartState()
 
 while state != learning.getTerminalState():
     print "state=", state
-    state = learning.takeAction(state, learning.computeBestAction(state), True, False, True)
+    state = learning.takeAction(state, learning.computeAction(state, 0)
 
 print "about to call coda"
-learning.takeAction(state, learning.computeBestAction(state), True, False, True, True)
+learning.takeAction(state, learning.computeAction(state, 0)
 print "called coda"
 
 learning.file.write("qvalues=")
@@ -207,4 +207,4 @@ print "qvalues="
 print learning.qvalues
 
 World.global_player.destroy()
-#'''
+'''

@@ -7,9 +7,11 @@ Authors: James Kuczynski <jkuczyns@cs.uml.edu>
 
 import random
 import Player
+import time
 import LilyPy
 # create audio player; use audio port 3
 global_player = Player.Player(3)
+global_player2 = Player.Player(2)
 
 class MusicWorld:
 
@@ -110,7 +112,7 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, shouldPlay, isTraining, tempo):
+    def takeAction(self, currState, action, shouldPlay, isTraining, tempo, isCoda = False):
 
         # finish action
         if (action[0] != "finish"):
@@ -120,8 +122,7 @@ class MusicWorld:
                 # store the first note played
                 if self.firstPerformanceNote == "" and not isTraining:
                     self.firstPerformanceNote = action[1][0]
-
-                #print "play: ", self.firstPerformanceNote
+                    print "play: ", self.firstPerformanceNote
 
 
                 if self.firstPerformanceNote == "C" and action[1][1] >=7 and action[1][1] <= 7:
@@ -155,17 +156,38 @@ class MusicWorld:
                 else:
                     octave = 4
 
-
                 try:
 
+                    tupleOfTuples = self.counterpoint.getCounterpoint(action[1][0], octave)
+                    # play note
+                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.VIOLA)
+                    global_player2.playNote(tupleOfTuples[0][0], tupleOfTuples[0][1], tempo / 2.0,
+                                            Player.Instrument.GRAND_PIANO)
+                    time.sleep(tempo / 2.0)
+                    global_player2.playNote(tupleOfTuples[1][0], tupleOfTuples[1][1], tempo / 2.0,
+                                            Player.Instrument.GRAND_PIANO)
+                    time.sleep(tempo / 2.0)
 
-                    #play note
-                    global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
-                    self.lilyPy.toLy( (action[1][0], octave) )
+                    self.lilyPy.toLy((action[1][0], octave))
 
 
                 except KeyboardInterrupt:
                     global_player.destroy()
+                    global_player2.destroy()
+
+                if isCoda:
+                    try:
+                        print "playing coda..."
+                        time.sleep(0.5)
+                        global_player.playNote(action[1][0], 5, tempo * 2, Player.Instrument.VIOLA)
+                        global_player2.playNote(action[1][0], 5 + 1, tempo * 2, Player.Instrument.GRAND_PIANO)
+                        time.sleep(2.0)  # give the reads time to exit
+
+                        self.lilyPy.file.write("\n}")
+                        self.lilyPy.file.close()
+                    except:
+                        global_player.destroy()
+                        global_player2.destroy()
 
         return action[1]
 
