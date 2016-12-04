@@ -41,7 +41,11 @@ class MathNote:
     def getLegalNotes(self, note_letters, octave):
         legalNoteArr = []
 
+        # 1st, 3rd, 5th
+        # one step up/down
+
         if note_letters == "C":
+            #FIXME: create a container class
             legalNoteArr.append((("C", octave + 1), list(("D", octave + 1), ("B", octave + 1))))
             legalNoteArr.append((("E", octave + 1), ()))
             legalNoteArr.append((("G", octave + 1), ()))
