@@ -14,6 +14,8 @@
 ##############################################################################
 
 import sys
+import random
+import time
 
 # Import QT modules
 from PyQt4.QtCore import *
@@ -25,6 +27,8 @@ import RecordGui
 import PremadeRecGui
 import PlayGui
 import HelpGui
+
+import Learning
 
 # Enumeration type for swapping between "pages"
 class Page:
@@ -42,6 +46,7 @@ class MasterGui(QWidget):
     def __init__(self):
         super(MasterGui, self).__init__()
         self.page = Page.START_GUI
+        self.counter = 0
         self.initUi()
 
     """
@@ -61,7 +66,7 @@ class MasterGui(QWidget):
         self.backBtn.clicked.connect(self.backBtnSlot)
         self.nextBtn = QPushButton("next>")
         self.nextBtn.clicked.connect(self.nextBtnSlot)
-        self.finishBtn = QPushButton("Finish")
+        self.finishBtn = QPushButton("Train")
         self.finishBtn.clicked.connect(self.finishBtnSlot)
         self.cancelBtn = QPushButton("Cancel")
         self.cancelBtn.clicked.connect(self.cancelBtnSlot)
@@ -91,7 +96,7 @@ class MasterGui(QWidget):
         # window orientation/resizing, etc.
         self.move(800, 400)
         self.resize(500, 400)
-        self.setWindowTitle('Musical Agent')
+        self.setWindowTitle('Xavier - The Musical Agent')
 
         self.setLayout(self.outerLayout)
 
@@ -142,9 +147,12 @@ class MasterGui(QWidget):
         elif self.page == Page.RECORD_GUI:
             self.unloadPage(1)
             self.loadPage(3)
-            self.nextBtn.setEnabled(False)
-            self.finishBtn.setEnabled(False)
+            self.nextBtn.setEnabled(True)
+            self.finishBtn.setEnabled(True)
             self.page = Page.PLAY_GUI
+
+            self.playGui.truthNotesLe.setText(self.recordGui.heardInput.text())
+
         elif self.page == Page.PREMADE_RECORD_GUI:
             self.unloadPage(2)
             self.loadPage(3)
@@ -158,7 +166,45 @@ class MasterGui(QWidget):
     """
     def finishBtnSlot(self):
         print "finish triggered"
+        if self.counter >= 7:
+            return
 
+        try:
+
+            # scale = ["C", "D", "E", "F", "G", "A", "B"]#listen()
+            # scale = ["C", "E", "G", "B", "D", "F", "A"]
+            #scale = ["E", "F#", "G#", "A", "B", "C#", "D#"]  # E Major
+            if self.counter == 0:
+                scale = self.recordGui.scale
+                self.xavier = Learning.Learning(scale)
+
+            # learning for 2k iterations
+            for x in range(250):
+                if x > 0 and x < 30 and self.counter == 0:
+                    self.xavier.qLearn(True, 0.05)
+                elif x % 250 == 0 and self.counter != 0:
+                    if random.random() > 0.5:
+                        self.xavier.qLearn(True, 0.07)
+                    else:
+                        self.xavier.qLearn(True, 0.1)
+                else:
+                    self.xavier.qLearn(False, None)
+                #print "x=", x
+            # agent is done learning
+            self.playGui.aiNotesLe.setText(self.playGui.aiNotesLe.text() + self.xavier.goalScale[self.counter] + " ")
+            self.counter += 1
+
+        except KeyboardInterrupt:
+            Learning.World.global_player.destroy()
+
+        if self.counter == 7:
+            self.playGui.trainingLbl.setStyleSheet("QLabel{ background-color: green; }")
+            self.playGui.trainingLbl.setText("Ready")
+            self.playGui.playBtn.setVisible(True)
+            self.playGui.playBtn.setEnabled(True)
+
+            self.xavier.createExplorationQvalues()
+            self.playGui.xavier = self.xavier
 
     """
     " The Cancel button is pressed.

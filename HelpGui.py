@@ -33,7 +33,7 @@ class HelpGui(QWidget):
         self.textEdit = QTextEdit()
         self.textEdit.setEnabled(False)
 
-        with open('../res/help.txt', 'r') as helpFile:
+        with open('res/help.txt', 'r') as helpFile:
             self.textEdit.setText(helpFile.read().replace('\n', '') )
 
         self.outerLayout.addWidget(self.titleLbl, 0, 0, Qt.AlignHCenter | Qt.AlignTop)

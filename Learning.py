@@ -25,8 +25,6 @@ class Learning(World.MusicWorld):
         #super(Learning, self).__init__(scale)
         World.MusicWorld.__init__(self, scale)
 
-        self.values = {} #util.Counter()  # key, square; each square has four wedges
-
         self.alpha = float(alpha)
         #self.epsilon = float(epsilon)
         self.gamma = float(gamma)
@@ -74,7 +72,7 @@ class Learning(World.MusicWorld):
             #if r < self.epsilon:
             #    nextState = self.takeAction(self.currState, random.choice(actions))
             #else:
-            nextState = self.takeAction(self.currState, currMaxAction[0], shouldPlay, True, tempo)
+            nextState = self.takeAction(self.currState, currMaxAction[0], shouldPlay, True, tempo, False)
             #print "nextState (real)=", nextState
 
             nextActions = self.getLegalActions(nextState)
@@ -167,7 +165,7 @@ class Learning(World.MusicWorld):
             else:
                 self.modQvalues[(k, v)] = self.qvalues[(k,v)]
 
-            print k, v, self.modQvalues[(k, v)]
+            #print k, v, self.modQvalues[(k, v)]
 
 
 

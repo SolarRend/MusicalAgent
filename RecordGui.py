@@ -14,14 +14,19 @@
 ##############################################################################
 
 import sys
+import time
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+
+import PitchDetection
+import threading
 
 
 class RecordGui(QWidget):
     def __init__(self):
         super(RecordGui, self).__init__()
         self.initUi()
+        self.scale = []
 
     """
     " Set up the UI elements.
@@ -30,6 +35,8 @@ class RecordGui(QWidget):
 
         # internal representation of the layout is in grid format.
         self.outerLayout = QGridLayout()
+
+        self.heardInput = QLineEdit()
 
         # create the buttons
         self.recordBtn = QPushButton("Record")
@@ -46,11 +53,12 @@ class RecordGui(QWidget):
         self.rejectBtn.clicked.connect(self.rejectBtnSlot)
 
         # add the elements to the layout
-        self.outerLayout.addWidget(self.recordBtn, 0, 0)
-        self.outerLayout.addWidget(self.stopBtn, 0, 1)
-        self.outerLayout.addWidget(self.playbackBtn, 1, 0, 1, 2)
-        self.outerLayout.addWidget(self.saveBtn, 2, 0)
-        self.outerLayout.addWidget(self.rejectBtn, 2, 1)
+        self.outerLayout.addWidget(self.heardInput, 0, 0, 1, 2, Qt.AlignCenter)
+        self.outerLayout.addWidget(self.recordBtn, 1, 0)
+        self.outerLayout.addWidget(self.stopBtn, 1, 1)
+        self.outerLayout.addWidget(self.playbackBtn, 2, 0, 1, 2)
+        self.outerLayout.addWidget(self.saveBtn, 3, 0)
+        self.outerLayout.addWidget(self.rejectBtn, 3, 1)
 
         # add the layout to the outermost widget
         self.setLayout(self.outerLayout)
@@ -62,6 +70,24 @@ class RecordGui(QWidget):
     """
     def recordBtnSlot(self):
         print "recordBtn was clicked"
+
+        if len(self.scale) < 7:
+            self.listen()
+        else:
+            print "7 notes have been recorded -- Xavier is sticking his fingers in his ears now"
+
+    def listen(self):
+        detector = PitchDetection.PitchDetection(self)
+
+        #for i in range(7):
+        note = detector.detect()
+        self.appendNoteToUi(note + " ")
+        self.scale.append(note)
+
+
+
+    def appendNoteToUi(self, text):
+        self.heardInput.setText(self.heardInput.text() + text)
 
 
     """
@@ -94,3 +120,5 @@ class RecordGui(QWidget):
     """
     def rejectBtnSlot(self):
         print "reject note"
+        self.scale = []
+        self.heardInput.setText("")

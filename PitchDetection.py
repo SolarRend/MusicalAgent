@@ -14,11 +14,16 @@
 import pyaudio
 import numpy as np
 import wave
+import RecordGui
 
 class PitchDetection:
 
-    def __init__(self):
+    def __init__(self, recordGui):
         self.p = pyaudio.PyAudio()
+
+        self.noteList = []
+
+        self.recordGui = recordGui
 
         self.FREQ_ADJUSTMENT = 8.0
 
@@ -151,7 +156,7 @@ class PitchDetection:
                         frames_per_buffer=CHUNK)
 
 
-        noteList = []
+        note = None
 
         # setting up dict for keeping count of how many times the base note is played
         baseNotes = {}
@@ -255,17 +260,19 @@ class PitchDetection:
 
                 for k, v in baseNotes.items():
 
-                    if v == 30 and k not in noteList:
+                    if v == 30 and k not in self.noteList:
                         noteRecognitionCount = 1 + noteRecognitionCount
-                        if noteRecognitionCount >= 7:
+                        if noteRecognitionCount >= 1:
                             switch = False
                         print "Note " + k + " recognized."
-                        noteList.append(k)
+                        self.noteList.append(k)
+                        note = k
+                        #self.recordGui.appendNoteToUi(k + " ")
 
 
             stream.close()
             self.p.terminate()
-            return noteList
+            return note
 
         except KeyboardInterrupt:
             stream.close()

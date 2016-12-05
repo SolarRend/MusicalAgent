@@ -116,7 +116,7 @@ class MusicWorld:
 
 
     #simple transition function for playing notes
-    def takeAction(self, currState, action, shouldPlay, isTraining, tempo, isCoda = False):
+    def takeAction(self, currState, action, shouldPlay, isTraining, tempo, accompaniment, isCoda = False):
 
         # finish action
         if (action[0] != "finish"):
@@ -161,7 +161,7 @@ class MusicWorld:
                     octave = 4
 
                 try:
-                    if not isTraining:
+                    if not isTraining and accompaniment:
                         tupleOfTuples = self.counterpoint.getCounterpoint(action[1][0], octave)
                         # play note
                         global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO) #viola
@@ -172,10 +172,13 @@ class MusicWorld:
                                                 Player.Instrument.GRAND_PIANO, 90)
                         time.sleep(tempo / 2.0)
 
-                        self.lilyPy.toLy((action[1][0], octave))
+
                     else:
                         global_player.playNote(action[1][0], octave, tempo, Player.Instrument.GRAND_PIANO)
                         time.sleep(tempo)
+
+                    if not isTraining:
+                        self.lilyPy.toLy((action[1][0], octave))
 
 
                 except KeyboardInterrupt:
